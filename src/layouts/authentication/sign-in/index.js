@@ -13,7 +13,7 @@ Coded by www.creative-tim.com
 * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
 */
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 // react-router-dom components
 import { Link, useNavigate } from "react-router-dom";
@@ -39,11 +39,17 @@ import { API } from "API";
 
 function SignIn() {
   const [rememberMe, setRememberMe] = useState(true);
-
+  const token = localStorage.getItem('token')
   const handleSetRememberMe = () => setRememberMe(!rememberMe);
   const navigate = useNavigate();
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
+
+
+  useEffect(()=>{
+    token ? navigate('/dashboard'):null
+  },[token])
+  
   const handleSubmit = () => {
     toast.loading("Logging...");
     const data = {

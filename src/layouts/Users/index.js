@@ -77,6 +77,7 @@ function Users() {
   const columns2 = [
     { name: "name", align: "left" },
     // { name: "email", align: "left" },
+    { name: "status", align: "center" },
     { name: "phone", align: "center" },
     { name: "Joined", align: "center" },
     { name: "action", align: "center" },
@@ -86,9 +87,9 @@ function Users() {
     return ({
       name: <Author image={team2} name={res?.name} email={res?.email} />,
       // function: <Function job="Manager" org="Organization" />,
-      // status: (
-      //   <SoftBadge variant="gradient" badgeContent="online" color="success" size="xs" container />
-      // ),
+      status: (
+        <SoftBadge variant="gradient" badgeContent={res?.isAdmin?"Admin":"Not Admin"} color={res?.isAdmin?"success":"error"} size="xs" container />
+      ),
       phone: (
         <SoftTypography variant="caption" color="secondary" fontWeight="medium">
          {res?.phone}

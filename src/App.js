@@ -3,7 +3,7 @@
 import { useState, useEffect, useMemo } from "react";
 
 // react-router components
-import { Routes, Route, Navigate, useLocation } from "react-router-dom";
+import { Routes, Route, Navigate, useLocation, useNavigate } from "react-router-dom";
 
 // @mui material components
 import { ThemeProvider } from "@mui/material/styles";
@@ -43,6 +43,12 @@ export default function App() {
   const [onMouseEnter, setOnMouseEnter] = useState(false);
   const [rtlCache, setRtlCache] = useState(null);
   const { pathname } = useLocation();
+  const token = localStorage.getItem('token')
+  const navigate = useNavigate()
+
+  useEffect(()=>{
+    !token ? navigate('/') : null
+  },[])
 
   // Cache for the rtl
   useMemo(() => {

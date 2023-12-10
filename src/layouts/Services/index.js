@@ -17,8 +17,54 @@ import team2 from "assets/images/team-2.jpg";
 import team3 from "assets/images/team-3.jpg";
 import team4 from "assets/images/team-4.jpg";
 import { Grid } from "@mui/material";
+import SoftButton from "components/SoftButton";
+import React, { useEffect, useState } from "react";
+import NewServiceDialog from "./NewServiceForm";
+import { ViewService } from "./ViewService";
+import axios from "axios";
+import { ADMIN_API } from "API";
 
 export const Services = () => {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState();
+  const [call, setCall] = useState(false);
+
+  useEffect(() => {
+    axios
+      .get(`${ADMIN_API}/services`)
+      .then((res) => {
+        console.log(res.data);
+        setData(res?.data);
+      })
+      .catch((e) => {
+        console.log(e);
+      });
+  }, [call]);
+
+  const handleOpenAddDialog = () => {
+    console.log("called");
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(!open);
+  };
+
+  const handleCall = () => {
+    setCall(!call);
+  };
+
+  const [openServiceView, setOpenServieView] = useState(false);
+  const [selectedService, setSelectedService] = useState();
+  const handleOpenServiceView = (data) => {
+    console.log("🚀 ~ file: index.js:40 ~ handleOpenServiceView ~ data:", data);
+    setOpenServieView(!openServiceView);
+    setSelectedService(data);
+  };
+  const handleCloseServiceView = () => {
+    setOpenServieView(!openServiceView);
+  };
+
   return (
     <>
       <DashboardLayout>
@@ -28,6 +74,14 @@ export const Services = () => {
             <Card>
               <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
                 <SoftTypography variant="h6">Services</SoftTypography>
+                <SoftButton
+                  variant="gradient"
+                  onClick={handleOpenAddDialog}
+                  color="dark"
+                  size="small"
+                >
+                  Create New Services
+                </SoftButton>
               </SoftBox>
               <SoftBox
                 sx={{
@@ -40,23 +94,26 @@ export const Services = () => {
                 }}
               >
                 <SoftBox p={4}>
-                  <Grid container  spacing={4}>
-                    <Grid  item xs={12} md={6} xl={3}>
-                      <DefaultProjectCard
-                        image={homeDecor1}
-                        label="project #2"
-                        title="modern"
-                        description="As Uber works through a huge amount of internal management turmoil."
-                        action={{
-                          type: "internal",
-                          route: "/pages/profile/profile-overview",
-                          color: "info",
-                          label: "view service",
-                        }}
-                      />
-                    </Grid>
-
-                   
+                  <Grid container spacing={4}>
+                    {data?.map((res, i) => (
+                      <Grid key={i} item xs={12} md={6} xl={3}>
+                        <Grid key={i} onClick={() => handleOpenServiceView(res)}>
+                          <DefaultProjectCard
+                            key={i}
+                            image={homeDecor1}
+                            // label=""
+                            title={res?.title}
+                            description={res?.description.split(" ").slice(0, 25) + "..."}
+                            action={{
+                              type: "internal",
+                              // route: "/pages/profile/profile-overview",
+                              color: "info",
+                              label: "view service",
+                            }}
+                          />
+                        </Grid>
+                      </Grid>
+                    ))}
                   </Grid>
                 </SoftBox>
               </SoftBox>
@@ -64,6 +121,13 @@ export const Services = () => {
           </SoftBox>
         </SoftBox>
         <Footer />
+        <NewServiceDialog call={handleCall} open={open} handleClose={handleClose} />
+        <ViewService
+          open={openServiceView}
+          handleClose={handleCloseServiceView}
+          data={selectedService}
+          call={handleCall}
+        />
       </DashboardLayout>
     </>
   );
