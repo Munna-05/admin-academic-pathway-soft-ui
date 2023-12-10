@@ -16,7 +16,7 @@ Coded by www.creative-tim.com
 import { useState, useEffect } from "react";
 
 // react-router components
-import { useLocation, Link } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 
 // prop-types is a library for typechecking of props.
 import PropTypes from "prop-types";
@@ -57,6 +57,7 @@ import {
 // Images
 import team2 from "assets/images/team-2.jpg";
 import logoSpotify from "assets/images/small-logos/logo-spotify.svg";
+import { Grid } from "@mui/material";
 
 function DashboardNavbar({ absolute, light, isMini }) {
   const [navbarType, setNavbarType] = useState();
@@ -135,6 +136,13 @@ function DashboardNavbar({ absolute, light, isMini }) {
     </Menu>
   );
 
+  const navigate = useNavigate()
+  const handleSignOut=()=>{
+    localStorage.removeItem('token')
+    localStorage.removeItem('id')
+    navigate('/')
+  }
+
   return (
     <AppBar
       position={absolute ? "absolute" : navbarType}
@@ -154,7 +162,7 @@ function DashboardNavbar({ absolute, light, isMini }) {
               /> */}
             </SoftBox>
             <SoftBox color={light ? "white" : "inherit"}>
-              <Link to="/authentication/sign-in">
+              
                 <IconButton sx={navbarIconButton} size="small">
                   {/* <Icon
                     sx={({ palette: { dark, white } }) => ({
@@ -168,10 +176,12 @@ function DashboardNavbar({ absolute, light, isMini }) {
                     fontWeight="medium"
                     color={light ? "error" : "error"}
                   >
+                  <Grid onClick={handleSignOut}>
                     Sign out
+                  </Grid>
                   </SoftTypography>
                 </IconButton>
-              </Link>
+              
               <IconButton
                 size="small"
                 color="inherit"
