@@ -58,6 +58,8 @@ import Cube from "examples/Icons/Cube";
 import Users from "layouts/Users";
 import { Services } from "layouts/Services";
 import { Blogs } from "layouts/Blogs";
+import { Posts } from "layouts/Posts";
+import { Jobs } from "layouts/Jobs";
 
 const routes = [
   {
@@ -120,7 +122,7 @@ const routes = [
     key: "jobs",
     route: "/jobs",
     icon: <Document size="12px" />,
-    component: <Blogs />,
+    component: <Jobs />,
     noCollapse: true,
   },
   {
@@ -129,7 +131,7 @@ const routes = [
     key: "posts",
     route: "/posts",
     icon: <Document size="12px" />,
-    component: <Blogs />,
+    component: <Posts />,
     noCollapse: true,
   },
   // {

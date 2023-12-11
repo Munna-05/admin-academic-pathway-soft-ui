@@ -10,20 +10,18 @@ import DashboardNavbar from "examples/Navbars/DashboardNavbar";
 import Footer from "examples/Footer";
 import DefaultProjectCard from "examples/Cards/ProjectCards/DefaultProjectCard";
 import homeDecor2 from "assets/images/home-decor-2.jpg";
-
 import { Grid } from "@mui/material";
-import SoftButton from "components/SoftButton";
-export const Blogs = () => {
-  return (
-    <>
-      <DashboardLayout>
+
+export const Posts=()=>{
+    return(
+        <>
+         <DashboardLayout>
         <DashboardNavbar />
         <SoftBox py={3}>
           <SoftBox mb={3}>
             <Card>
               <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
-                <SoftTypography variant="h6">Blogs</SoftTypography>
-                <SoftButton variant='gradient' color='dark' size='small'>Create new Blog</SoftButton>
+                <SoftTypography variant="h6">Posts</SoftTypography>
               </SoftBox>
               <SoftBox
                 sx={{
@@ -59,6 +57,6 @@ export const Blogs = () => {
         </SoftBox>
         <Footer />
       </DashboardLayout>
-    </>
-  );
-};
+        </>
+    )
+}
