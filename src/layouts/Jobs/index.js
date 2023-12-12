@@ -42,13 +42,13 @@ export const Jobs = () => {
 
 
                       <Grid item lg={4}>
-                        <SoftBox variant="gradient" shadow="md" borderRadius="md" bgColor='light'>
+                        <SoftBox variant="gradient" overflow='hidden' shadow="md" borderRadius="md" bgColor='light'>
                          <SoftBox p={2}>
-                         <SoftTypography fontSize="18px">Job Title</SoftTypography>
-                          <SoftTypography fontSize="14px">Company Name</SoftTypography>
-                          <SoftTypography fontSize="14px">Location</SoftTypography>
+                         <SoftTypography fontSize="18px" fontWeight='medium' >Job Title</SoftTypography>
+                          <SoftTypography fontSize="14px" fontWeight='regular'>Company Name</SoftTypography>
+                          <SoftTypography fontSize="14px" fontWeight='light'>Location</SoftTypography>
                          </SoftBox>
-                          <SoftBox variant='gradient' bgColor='dark' color='light' p={1} mt={4} borderRadius='md'  display={'flex'} justifyContent={'space-between'}>
+                          <SoftBox variant='gradient' bgColor='dark' color='light' p={1} mt={4}   display={'flex'} justifyContent={'space-between'}>
                             <SoftTypography fontSize='12px' color='light'>Exp</SoftTypography>
                             <SoftTypography fontSize='12px' color='light'>Type</SoftTypography>
                           </SoftBox>

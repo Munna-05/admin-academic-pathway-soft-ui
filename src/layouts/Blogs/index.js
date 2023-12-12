@@ -13,7 +13,36 @@ import homeDecor2 from "assets/images/home-decor-2.jpg";
 
 import { Grid } from "@mui/material";
 import SoftButton from "components/SoftButton";
+import { AddNewBlog } from "./AddNewBlog";
+import { useEffect, useState } from "react";
+import axios from "axios";
+import { ADMIN_API } from "API";
 export const Blogs = () => {
+  const [open, setOpen] = useState(false);
+  const [data, setData] = useState();
+  const [call, setCall] = useState(false);
+
+
+  useEffect(()=>{
+    axios.get(`${ADMIN_API}/blog`).then((res)=>{
+      console.log(res?.data)
+      setData(res?.data)
+    }).catch(e=>console.log(e))
+  },[call])
+
+
+  const handleOpenAddDialog = () => {
+    console.log("called");
+    setOpen(true);
+  };
+
+  const handleClose = () => {
+    setOpen(!open);
+  };
+
+  const handleCall = () => {
+    setCall(!call);
+  };
   return (
     <>
       <DashboardLayout>
@@ -23,7 +52,7 @@ export const Blogs = () => {
             <Card>
               <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
                 <SoftTypography variant="h6">Blogs</SoftTypography>
-                <SoftButton variant='gradient' color='dark' size='small'>Create new Blog</SoftButton>
+                <SoftButton onClick={handleOpenAddDialog} variant='gradient' color='dark' size='small'>Create new Blog</SoftButton>
               </SoftBox>
               <SoftBox
                 sx={{
@@ -37,12 +66,12 @@ export const Blogs = () => {
               >
                 <SoftBox p={4}>
                   <Grid container spacing={4}>
-                    <Grid item xs={12} md={6} xl={3}>
+                   {data?.map((res,i)=> <Grid key={i} item xs={12} md={6} xl={3}>
                       <DefaultProjectCard
                         image={homeDecor2}
                         label="project #2"
-                        title="modern"
-                        description="As Uber works through a huge amount of internal management turmoil."
+                        title={res?.title}
+                        description={res.content.split(" ").slice(0, 25) + "..."}
                         action={{
                           type: "internal",
                           route: "/pages/profile/profile-overview",
@@ -50,13 +79,14 @@ export const Blogs = () => {
                           label: "view service",
                         }}
                       />
-                    </Grid>
+                    </Grid>)}
                   </Grid>
                 </SoftBox>
               </SoftBox>
             </Card>
           </SoftBox>
         </SoftBox>
+        <AddNewBlog open={open} handleClose={handleClose} call={handleCall}/>
         <Footer />
       </DashboardLayout>
     </>
