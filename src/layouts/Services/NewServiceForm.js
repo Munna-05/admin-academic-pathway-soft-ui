@@ -14,38 +14,75 @@ import SoftTypography from "components/SoftTypography";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { ADMIN_API } from "API";
+import { IMAGE_KEY } from "API";
+import { UPLOAD } from "API";
 
-function NewServiceDialog({ open, handleClose ,call}) {
+function NewServiceDialog({ open, handleClose, call }) {
   const [title, setTitle] = useState();
-  const [desc,setDesc] = useState("")
-  const handleSubmit = () => {
-    toast.loading('Adding new Service ....')
-    console.log(desc)
-    if(desc?.split(" ").length < 100){
-      toast.remove()
-      toast.error('Description must be greater than 100 words')
-    }else{
-      const data ={
-        title:title,
-        description:desc,
-        createdBy:localStorage.getItem('id')
-      }
-      console.log("🚀 ~ file: NewServiceForm.js:28 ~ handleSubmit ~ data:", data)
-      axios.post(`${ADMIN_API}/services`,data).then((res)=>{
-        console.log(res?.data?.data)
-        toast.remove()
-        toast.success(res?.data?.message)
-        setDesc('')
-        setTitle('')
-        call()
-        handleClose()
-      }).catch(e=>{
-        console.log(e)
-        toast.remove()
-        toast.error(e?.response?.data?.message)
-        handleClose()
-      })
+  const [desc, setDesc] = useState("");
+  const [image, setImage] = useState();
+  const handleSubmit = async () => {
+    toast.loading("Adding new Service ....");
+    console.log(desc);
+    if (desc.split(" ").length < 100) {
+      toast.remove();
+      toast.error("Description must be greater than 100 words");
+    } else {
+      let data = {
+        title: title,
+        description: desc,
+        createdBy: localStorage.getItem("id"),
+      };
+      console.log("🚀 ~ file: NewServiceForm.js:28 ~ handleSubmit ~ data:", data);
+
+      const formData = new FormData();
+      formData.append("file", image);
+
+      const pinataMetadata = JSON.stringify({
+        name: "File name",
+      });
+      formData.append("pinataMetadata", pinataMetadata);
+
+      const pinataOptions = JSON.stringify({
+        cidVersion: 0,
+      });
+      formData.append("pinataOptions", pinataOptions);
+
+      await axios
+        .post(UPLOAD, formData, {
+          headers: {
+            "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+            // Add your authorization token here if needed
+            Authorization: `Bearer ${IMAGE_KEY}`,
+          },
+        })
+        .then(async (ipfsHash) => {
+          console.log(
+            "🚀 ~ file: NewServiceForm.js:62 ~ ).then ~ ipfsHash:",
+            ipfsHash?.data?.IpfsHash
+          );
+          data.image = ipfsHash?.data?.IpfsHash;
+          await axios
+            .post(`${ADMIN_API}/services`, data)
+            .then((res) => {
+              console.log(res?.data?.data);
+              toast.remove();
+              toast.success(res?.data?.message);
+              setDesc("");
+              setTitle("");
+              call();
+              handleClose();
+            })
+            .catch((e) => {
+              console.log(e);
+              toast.remove();
+              toast.error(e?.response?.data?.message);
+              handleClose();
+            });
+        });
     }
+
+ 
   };
   return (
     <>
@@ -74,10 +111,10 @@ function NewServiceDialog({ open, handleClose ,call}) {
                 }}
                 rows={10}
                 placeholder="Description about service.."
-                onChange={(e)=>setDesc(e.target.value)}
+                onChange={(e) => setDesc(e.target.value)}
                 value={desc}
               />
-              <SoftInput type="file" />
+              <SoftInput type="file" onChange={(e) => setImage(e.target.files[0])} />
               <SoftTypography variant="caption" color="primary">
                 Upload a cover photo
               </SoftTypography>
@@ -100,7 +137,7 @@ function NewServiceDialog({ open, handleClose ,call}) {
 NewServiceDialog.propTypes = {
   open: PropTypes.bool.isRequired,
   handleClose: PropTypes.func.isRequired,
-  call:PropTypes.func.isRequired
+  call: PropTypes.func.isRequired,
 };
 
 export default NewServiceDialog;

@@ -17,6 +17,7 @@ import { AddNewBlog } from "./AddNewBlog";
 import { useEffect, useState } from "react";
 import axios from "axios";
 import { ADMIN_API } from "API";
+import { VIEW } from "API";
 export const Blogs = () => {
   const [open, setOpen] = useState(false);
   const [data, setData] = useState();
@@ -68,10 +69,10 @@ export const Blogs = () => {
                   <Grid container spacing={4}>
                    {data?.map((res,i)=> <Grid key={i} item xs={12} md={6} xl={3}>
                       <DefaultProjectCard
-                        image={homeDecor2}
-                        label="project #2"
+                        image={VIEW+res?.image}
+                        // label="project #2"
                         title={res?.title}
-                        description={res.content.split(" ").slice(0, 25) + "..."}
+                        description={res.content.split(" ").slice(0, 25).join(' ') + "..."}
                         action={{
                           type: "internal",
                           route: "/pages/profile/profile-overview",

@@ -23,6 +23,8 @@ import NewServiceDialog from "./NewServiceForm";
 import { ViewService } from "./ViewService";
 import axios from "axios";
 import { ADMIN_API } from "API";
+import { VIEW } from "API";
+console.log("🚀 ~ file: index.js:27 ~ VIEW:", VIEW)
 
 export const Services = () => {
   const [open, setOpen] = useState(false);
@@ -100,7 +102,7 @@ export const Services = () => {
                         <Grid key={i} onClick={() => handleOpenServiceView(res)}>
                           <DefaultProjectCard
                             key={i}
-                            image={homeDecor1}
+                            image={res?.image ? VIEW+res?.image : ""}
                             // label=""
                             title={res?.title}
                             description={res?.description.split(" ").slice(0, 25) + "..."}

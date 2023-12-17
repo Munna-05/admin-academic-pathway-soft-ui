@@ -14,34 +14,74 @@ import SoftTypography from "components/SoftTypography";
 import { toast } from "react-hot-toast";
 import axios from "axios";
 import { ADMIN_API } from "API";
+import { UPLOAD } from "API";
+import { IMAGE_KEY } from "API";
+import { Grid } from "@mui/material";
 
 export const AddNewBlog = ({open,call,handleClose}) => {
   const [title, setTitle] = useState();
+  const [subTitle,setSubTitle] = useState()
   const [desc, setDesc] = useState("");
+  const [image,setImage] = useState()
   const author = localStorage.getItem("id");
 
-  const handleCreateBlog = () => {
+  const handleCreateBlog = async() => {
     toast.loading('Creating new Blog...')
     const data = {
       title: title,
+      description:subTitle,
       content: desc,
       author: author,
     };
-    console.log("🚀 ~ file: AddNewBlog.js:29 ~ handleCreateBlog ~ data:", data);
-    axios.post(`${ADMIN_API}/blog`,data).then((res)=>{
-        console.log(res.data)
-        toast.remove()
-        toast.success('New Blog Created')
-        setTitle('')
-        setDesc('')
-        call()
-        handleClose()
-    }).catch(e=>{
-        console.log(e)
-        toast.remove()
-        toast.error(e?.response?.data?.message)
+    const formData = new FormData();
+    formData.append("file", image);
 
-    })
+    const pinataMetadata = JSON.stringify({
+      name: "File name",
+    });
+    formData.append("pinataMetadata", pinataMetadata);
+
+    const pinataOptions = JSON.stringify({
+      cidVersion: 0,
+    });
+    formData.append("pinataOptions", pinataOptions);
+
+    await axios
+      .post(UPLOAD, formData, {
+        headers: {
+          "Content-Type": `multipart/form-data; boundary=${formData._boundary}`,
+          // Add your authorization token here if needed
+          Authorization: `Bearer ${IMAGE_KEY}`,
+        },
+      })
+      .then(async (ipfsHash) => {
+        console.log(
+          "🚀 ~ file: NewServiceForm.js:62 ~ ).then ~ ipfsHash:",
+          ipfsHash?.data?.IpfsHash
+        );
+        data.image = ipfsHash?.data?.IpfsHash;
+        axios.post(`${ADMIN_API}/blog`,data).then((res)=>{
+          console.log(res.data)
+          toast.remove()
+          toast.success('New Blog Created')
+          setTitle('')
+          setDesc('')
+          setSubTitle('')
+          call()
+          handleClose()
+      }).catch(e=>{
+          console.log(e)
+          toast.remove()
+          toast.error(e?.response?.data?.message)
+  
+      })
+      });
+
+
+
+
+
+    
   };
 
 
@@ -58,6 +98,13 @@ export const AddNewBlog = ({open,call,handleClose}) => {
                 value={title}
                 placeholder="Title"
               />
+             <Grid mt={1}>
+             <SoftInput
+                onChange={(e) => setSubTitle(e.target.value)}
+                value={subTitle}
+                placeholder="Sub Title"
+              />
+             </Grid>
               <textarea
                 style={{
                   marginTop: 10,
@@ -76,7 +123,7 @@ export const AddNewBlog = ({open,call,handleClose}) => {
                 onChange={(e) => setDesc(e.target.value)}
                 value={desc}
               />
-              <SoftInput type="file" />
+              <SoftInput type="file" onChange={(e)=>setImage(e.target.files[0])} />
               <SoftTypography variant="caption" color="primary">
                 Upload a cover photo
               </SoftTypography>

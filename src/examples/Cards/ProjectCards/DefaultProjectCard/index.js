@@ -31,6 +31,7 @@ import SoftButton from "components/SoftButton";
 import SoftAvatar from "components/SoftAvatar";
 
 function DefaultProjectCard({ image, label, title, description, action, authors }) {
+  console.log("🚀 ~ file: index.js:34 ~ DefaultProjectCard ~ image:", image)
   const renderAuthors = authors.map(({ image: media, name }) => (
     <Tooltip key={name} title={name} placement="bottom">
       <SoftAvatar
