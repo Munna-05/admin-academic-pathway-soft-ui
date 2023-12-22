@@ -13,8 +13,34 @@ import homeDecor2 from "assets/images/home-decor-2.jpg";
 import { Grid } from "@mui/material";
 import Bill from "layouts/billing/components/Bill";
 import SoftButton from "components/SoftButton";
+import { useEffect, useState } from "react";
+import AddNewJob from "./AddNewJob";
+import axios from "axios";
+import { ADMIN_API } from "API";
 
 export const Jobs = () => {
+  const [openForm, setOpenForm] = useState(false);
+  const [Call, setCall] = useState(false);
+  const [data, setData] = useState();
+
+  const handleCloseForm = () => {
+    setOpenForm(!openForm);
+  };
+
+  const handleCall = () => setCall(!Call);
+
+  useEffect(() => {
+    axios
+      .get(`${ADMIN_API}/jobs`)
+      .then((res) => {
+        console.log(res?.data);
+        setData(res?.data);
+      })
+      .catch((e) => {
+        console.log(e?.response?.data?.message);
+      });
+  }, [Call]);
+
   return (
     <>
       <DashboardLayout>
@@ -24,7 +50,14 @@ export const Jobs = () => {
             <Card>
               <SoftBox display="flex" justifyContent="space-between" alignItems="center" p={3}>
                 <SoftTypography variant="h6">Jobs</SoftTypography>
-                <SoftButton size='small' variant='gradient' color='dark'>Create New Job</SoftButton>
+                <SoftButton
+                  size="small"
+                  variant="gradient"
+                  color="dark"
+                  onClick={() => setOpenForm(!openForm)}
+                >
+                  Create New Job
+                </SoftButton>
               </SoftBox>
               <SoftBox
                 sx={{
@@ -39,26 +72,45 @@ export const Jobs = () => {
                 <SoftBox p={4}>
                   <Grid container spacing={4}>
                     <Grid p={2} container spacing={2} lg={12}>
-
-
-                      <Grid item lg={4}>
-                        <SoftBox variant="gradient" overflow='hidden' shadow="md" borderRadius="md" bgColor='light'>
-                         <SoftBox p={2}>
-                         <SoftTypography fontSize="18px" fontWeight='medium' >Job Title</SoftTypography>
-                          <SoftTypography fontSize="14px" fontWeight='regular'>Company Name</SoftTypography>
-                          <SoftTypography fontSize="14px" fontWeight='light'>Location</SoftTypography>
-                         </SoftBox>
-                          <SoftBox variant='gradient' bgColor='dark' color='light' p={1} mt={4}   display={'flex'} justifyContent={'space-between'}>
-                            <SoftTypography fontSize='12px' color='light'>Exp</SoftTypography>
-                            <SoftTypography fontSize='12px' color='light'>Type</SoftTypography>
+                      {data?.map((res, i) => (
+                        <Grid key={i} item lg={4}>
+                          <SoftBox
+                            variant="gradient"
+                            overflow="hidden"
+                            shadow="md"
+                            borderRadius="md"
+                            bgColor="light"
+                          >
+                            <SoftBox p={2}>
+                              <SoftTypography fontSize="18px" fontWeight="medium">
+                                {res?.title}
+                              </SoftTypography>
+                              <SoftTypography fontSize="14px" fontWeight="regular">
+                                {res?.company}
+                              </SoftTypography>
+                              <SoftTypography fontSize="14px" fontWeight="light">
+                                {res?.location}
+                              </SoftTypography>
+                            </SoftBox>
+                            <SoftBox
+                              variant="gradient"
+                              bgColor="dark"
+                              color="light"
+                              p={1}
+                              mt={4}
+                              display={"flex"}
+                              justifyContent={"space-between"}
+                            >
+                              <SoftTypography fontSize="12px" color="light">
+                                {res?.experienceLevel}
+                              </SoftTypography>
+                              <SoftTypography fontSize="12px" color="light">
+                                {res?.type}
+                              </SoftTypography>
+                            </SoftBox>
                           </SoftBox>
-                        </SoftBox>
-                      </Grid>
-
-
-                   
-
-
+                        </Grid>
+                      ))}
                     </Grid>
                   </Grid>
                 </SoftBox>
@@ -67,6 +119,7 @@ export const Jobs = () => {
           </SoftBox>
         </SoftBox>
         <Footer />
+        <AddNewJob open={openForm} handleClose={handleCloseForm} call={handleCall} />
       </DashboardLayout>
     </>
   );
