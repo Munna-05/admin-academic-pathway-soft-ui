@@ -19,16 +19,36 @@ const AddNewCourse = ({ open, handleClose, call }) => {
   const [courseType, setCourseType] = useState("UG");
   const [Description, setDescription] = useState("");
   const [Name, setName] = useState("");
+  const [country, setCountry] = useState("");
   const [Duration, setDuration] = useState("");
 
   const handleSubmit = () => {
+    toast.loading("Listing new course ...")
     const data = {
       Name,
       Description,
       Duration,
       courseType,
+      country
     };
     console.log("🚀 ~ file: AddNewCourse.js:31 ~ handleSubmit ~ data:", data)
+
+    axios.post(`${ADMIN_API}/courses`,data).then((res)=>{
+      console.log(res.data)
+      toast.remove()
+      toast.success("Course listed successfully ...")
+      setName('')
+      setDescription('')
+
+      setDuration()
+      setCourseType('UG')
+      handleClose()
+      call()
+    }).catch(e=>{
+      console.log(e?.response?.data?.message)
+      toast.remove()
+      toast.error(e?.response?.data?.message)
+    })
   };
 
   return (
@@ -39,11 +59,14 @@ const AddNewCourse = ({ open, handleClose, call }) => {
           <DialogContent>
             <SoftBox spacing={2} gap={2}>
               <Grid p={1}>
-                <SoftInput placeholder="Course Name" />
+                <SoftInput placeholder="Course Name" onChange={(e)=>setName(e.target.value)} />
               </Grid>
 
               <Grid p={1}>
-                <SoftInput type="number" placeholder="Course Duration in years" />
+                <SoftInput type="number" placeholder="Course Duration in years" onChange={(e)=>setDuration(e.target.value)} />
+              </Grid>
+              <Grid p={1}>
+                <SoftInput type="text" placeholder="Country name" onChange={(e)=>setCountry(e.target.value)} />
               </Grid>
               <Grid p={1}>
                 <FormControl variant="filled" fullWidth>

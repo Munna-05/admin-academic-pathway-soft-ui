@@ -25,7 +25,7 @@ export const Courses = () => {
 
   useEffect(() => {
     axios
-      .get(`${ADMIN_API}/blog`)
+      .get(`${ADMIN_API}/courses`)
       .then((res) => {
         console.log(res?.data);
         setData(res?.data);
@@ -87,27 +87,44 @@ export const Courses = () => {
                 <SoftBox p={4}>
                   <Grid container spacing={4}>
                   
-                      <Grid
-                        // key={i}
-                        onClick={() => handleOpenBlogView()}
-                        item
-                        xs={12}
-                        md={6}
-                        xl={3}
-                      >
-                        <DefaultProjectCard
-                        //   image={VIEW + res?.image}
-                          // label="project #2"
-                          title={"course name"}
-                          description={'descriptions'}
-                          action={{
-                            type: "internal",
-                            // route: "/pages/profile/profile-overview",
-                            color: "info",
-                            label: "view blog",
-                          }}
-                        />
-                      </Grid>
+                     {data?.map((res,i)=> <Grid key={i} item lg={4}>
+                          <SoftBox
+                            variant="gradient"
+                            overflow="hidden"
+                            shadow="md"
+                            borderRadius="md"
+                            bgColor="light"
+                            
+                          >
+                            <SoftBox p={2}>
+                              <SoftTypography fontSize="18px" fontWeight="medium">
+                                {res?.name}
+                              </SoftTypography>
+                              <SoftTypography height={'4vh'}  fontSize="14px" fontWeight="regular">
+                                {res?.description?.slice(0,150)+"..."}
+                              </SoftTypography>
+                              <SoftTypography fontSize="14px" fontWeight="light">
+                                {/* {res?.location} */}
+                              </SoftTypography>
+                            </SoftBox>
+                            <SoftBox
+                              variant="gradient"
+                              bgColor="dark"
+                              color="light"
+                              p={1}
+                              mt={4}
+                              display={"flex"}
+                              justifyContent={"space-between"}
+                            >
+                              <SoftTypography fontSize="12px" color="light">
+                                {res?.duration} years
+                              </SoftTypography>
+                              <SoftTypography fontSize="12px" color="light">
+                                {res?.level}
+                              </SoftTypography>
+                            </SoftBox>
+                          </SoftBox>
+                        </Grid>)}
                 
                   </Grid>
                 </SoftBox>
