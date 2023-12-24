@@ -60,6 +60,7 @@ import { Services } from "layouts/Services";
 import { Blogs } from "layouts/Blogs";
 import { Posts } from "layouts/Posts";
 import { Jobs } from "layouts/Jobs";
+import { Courses } from "layouts/courses";
 
 const routes = [
   {
@@ -123,6 +124,15 @@ const routes = [
     route: "/jobs",
     icon: <Document size="12px" />,
     component: <Jobs />,
+    noCollapse: true,
+  },
+  {
+    type: "collapse",
+    name: "Courses",
+    key: "courses",
+    route: "/courses",
+    icon: <Document size="12px" />,
+    component: <Courses />,
     noCollapse: true,
   },
   {
