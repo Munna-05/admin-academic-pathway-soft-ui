@@ -14,6 +14,7 @@ import SoftTypography from "components/SoftTypography";
 import Bill from "layouts/billing/components/Bill";
 import React, { useEffect, useState } from "react";
 import ReplyBox from "./ReplayBox";
+import DeleteBox from "./DeleteBox";
 
 function BillingInformation() {
   const [data, setData] = useState();
@@ -42,6 +43,15 @@ function BillingInformation() {
       .catch((e) => console.log(e));
   }, [call]);
 
+  const [openDelete,setOpenDelete] = useState(false)
+  const handleCloseDelete=()=>{
+    setOpenDelete(false)
+  }
+  const handleDelete=(id)=>{
+    setOpenDelete(true)
+    setSelected(id)
+  }
+
   return (
     <Card id="delete-account">
       <SoftBox pt={3} px={2}>
@@ -61,6 +71,7 @@ function BillingInformation() {
             email={res?.email}
             enquiry={res?.message}
             handleClickOpen={() => handleClickOpen(res?._id)}
+            handleDelete = {()=>handleDelete(res?._id)}
           />
           }
          })}
@@ -68,6 +79,7 @@ function BillingInformation() {
         </SoftBox>
       </SoftBox>
       <ReplyBox open={open} handleClose={handleClose} call={handleCall} id={selected} />
+      <DeleteBox open={openDelete} handleClose={handleCloseDelete} call={handleCall} id={selected} />
     </Card>
 
 
