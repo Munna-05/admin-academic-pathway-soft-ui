@@ -11,7 +11,7 @@ import SoftBox from "components/SoftBox";
 import SoftTypography from "components/SoftTypography";
 import SoftButton from "components/SoftButton";
 
-function Bill({ name, Phone, email, enquiry, noGutter }) {
+function Bill({ name, Phone, email, enquiry, noGutter ,handleClickOpen}) {
   return (
     <SoftBox
       component="li"
@@ -47,7 +47,7 @@ function Bill({ name, Phone, email, enquiry, noGutter }) {
                 <Icon>delete</Icon>&nbsp;delete
               </SoftButton>
             </SoftBox>
-            <SoftButton variant="text" color="dark">
+            <SoftButton onClick={handleClickOpen} variant="text" color="dark">
               <Icon>edit</Icon>&nbsp;edit
             </SoftButton>
           </SoftBox>
@@ -91,6 +91,7 @@ Bill.propTypes = {
   email: PropTypes.string.isRequired,
   enquiry: PropTypes.string.isRequired,
   noGutter: PropTypes.bool,
+  handleClickOpen :PropTypes.isRequired
 };
 
 export default Bill;
